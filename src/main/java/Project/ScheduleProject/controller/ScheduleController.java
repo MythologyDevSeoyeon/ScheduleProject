@@ -89,7 +89,7 @@ public class ScheduleController {
     }
 
     // Update -> 수정 (일정만 수정)
-    @PutMapping("/{id}/task")
+    @PatchMapping("/{id}/task")
     public ResponseEntity<ScheduleResponseDto> updateTask(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto requestDto
@@ -102,7 +102,7 @@ public class ScheduleController {
         }
 
         //필수 값 검증
-        if(requestDto.getTask() == null ||requestDto.getPassword() == null){
+        if(requestDto.getTask() == null || requestDto.getPassword() == null || requestDto.getAuthor() != null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -118,7 +118,7 @@ public class ScheduleController {
 
 
     // Update -> 수정 (작성자만 수정)
-    @PutMapping("/{id}/author")
+    @PatchMapping("/{id}/author")
     public ResponseEntity<ScheduleResponseDto> updateAuthor (
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto requestDto
@@ -131,7 +131,7 @@ public class ScheduleController {
         }
 
         //필수 값 검증
-        if(requestDto.getAuthor() == null ||requestDto.getPassword() == null){
+        if(requestDto.getAuthor() == null || requestDto.getPassword() == null || requestDto.getTask() != null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
