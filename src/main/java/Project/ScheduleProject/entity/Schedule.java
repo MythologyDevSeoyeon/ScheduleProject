@@ -1,12 +1,13 @@
 package Project.ScheduleProject.entity;
 
-import Project.ScheduleProject.dto.ScheduleRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
 public class Schedule {
+    @Setter
     private Long id;
     private String author;
     private String password;
@@ -14,18 +15,28 @@ public class Schedule {
     private String createdAt;
     private String updatedAt;
 
-    public void update(ScheduleRequestDto requestDto) {
-        this.author = requestDto.getAuthor();
-        this.password = requestDto.getPassword();
-        this.task = requestDto.getTask();
-        this.updatedAt = requestDto.getUpdatedAt();
+    public Schedule(String author, String password, String task, String createdAt, String updatedAt){
+        this.author = author;
+        this.password = password;
+        this.task = task;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public void updateTask(ScheduleRequestDto requestDto) {
-        this.task = requestDto.getTask();
+    public void update(String author, String task, String updatedAt) {
+        this.author = author;
+        this.task = task;
+        this.updatedAt = updatedAt;
     }
 
-    public void updateAuthor(ScheduleRequestDto requestDto) {
-        this.author = requestDto.getAuthor();
+    public void updateTask(String task, String updatedAt) {
+        this.task = task;
+        this.updatedAt = updatedAt;
     }
+
+    public void updateAuthor(String author, String updatedAt) {
+        this.author = author;
+        this.updatedAt = updatedAt;
+    }
+
 }
