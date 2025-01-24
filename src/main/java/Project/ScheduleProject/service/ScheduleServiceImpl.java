@@ -22,10 +22,15 @@ public class ScheduleServiceImpl implements ScheduleService{
     // create
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto requestDto) {
-
-        Schedule schedule = new Schedule(requestDto.getAuthor(), requestDto.getPassword(),requestDto.getTask(),requestDto.getCreatedAt(), requestDto.getUpdatedAt());
+        validateRequiredFields(requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword());
+        Schedule schedule = new Schedule(
+                requestDto.getAuthor(),
+                requestDto.getPassword(),
+                requestDto.getTask(),
+                requestDto.getCreatedAt(),
+                requestDto.getUpdatedAt()
+        );
         Schedule savedSchedule = scheduleRepository.saveSchedule(schedule);
-
         return new ScheduleResponseDto(savedSchedule);
     }
 
@@ -39,12 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        //NPE방지
-        if(schedule == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
-
+        validateScheduleExistence(schedule, id);
         return new ScheduleResponseDto(schedule);
     }
 
@@ -52,26 +52,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public ScheduleResponseDto updateSchedule(Long id, String author, String task, String password, String updateAt) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        //NPE방지
-        if(schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + "는 존재하지 않는 아이디 입니다.");
-        }
-
-        //필수 값 검증
-        if(author == null || task == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"작성자와, 할일을 입력해주세요.");
-        }
-
-        // 비밀번호 검증
-        if(password == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"비밀번호를 입력해주세요.");
-        }else if(!password.equals(schedule.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
-        }
-
+        validateScheduleExistence(schedule,id);
+        validateRequiredFields(author,task,password);
+        validatePassword(password,schedule.getPassword());
         schedule.update(author, task, updateAt);
-
         return new ScheduleResponseDto(schedule);
     }
 
@@ -79,26 +63,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public ScheduleResponseDto updateTask(Long id, String author, String task, String password, String updatedAt) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        //NPE방지
-        if(schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + "는 존재하지 않는 아이디 입니다.");
-        }
-
-        //필수 값 검증
-        if(author != null || task == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"작성자와, 할일을 입력해주세요.");
-        }
-
-        // 비밀번호 검증
-        if(password == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"비밀번호를 입력해주세요.");
-        }else if(!password.equals(schedule.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
-        }
-
+        validateScheduleExistence(schedule,id);
+        validateRequiredFields(author,task,password);
+        validatePassword(password,schedule.getPassword());
         schedule.updateTask(task, updatedAt);
-
         return new ScheduleResponseDto(schedule);
     }
 
@@ -106,40 +74,49 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public ScheduleResponseDto updateAuthor(Long id, String author, String task, String password, String updatedAt) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        //NPE방지
-        if(schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + "는 존재하지 않는 아이디 입니다.");
-        }
-
-        //필수 값 검증
-        if(author == null || task != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"작성자와, 할일을 입력해주세요.");
-        }
-
-        // 비밀번호 검증
-        if(password == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"비밀번호를 입력해주세요.");
-        }else if(!password.equals(schedule.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
-        }
-
+        validateScheduleExistence(schedule,id);
+        validateRequiredFields(author,password);
+        validatePassword(password, schedule.getPassword());
         schedule.updateAuthor(author, updatedAt);
-
         return new ScheduleResponseDto(schedule);
     }
 
     //Delete -> 삭제
     @Override
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(Long id, String password) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        //NPE 검증
-        if(schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + "는 존재하지 않는 아이디 입니다.");
-        }
-
+        validateScheduleExistence(schedule,id);
+        validatePassword(password, schedule.getPassword());
         scheduleRepository.deleteSchedule(id);
     }
 
+
+    // 필수 값 검증
+    private void validateRequiredFields(Object... fields){
+        for(Object field : fields){
+            if(field == null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "필수 값을 모두 입력해주세요.");
+            }
+            if(field instanceof String && ((String)field).trim().isEmpty()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "문자열 값이 비어 있습니다.");
+            }
+        }
+    }
+
+    // 비밀번호 검증
+    private void validatePassword(String inputPassword, String actualPassword){
+        if(inputPassword == null || inputPassword.trim().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호를 입력해주세요.");
+        }
+        if(!inputPassword.equals(actualPassword)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    // 일정의 존재 여부
+    private void validateScheduleExistence(Schedule schedule, Long id){
+        if(schedule == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": 이 아이디는 존재하지 않는 일정 입니다.");
+        }
+    }
 }

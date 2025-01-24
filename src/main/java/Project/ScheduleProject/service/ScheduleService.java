@@ -25,5 +25,5 @@ public interface ScheduleService {
     ScheduleResponseDto updateAuthor(Long id, String author, String task, String password, String updatedAt);
 
     //Delete -> 삭제
-    void deleteSchedule(Long id);
+    void deleteSchedule(Long id, String password);
 }
