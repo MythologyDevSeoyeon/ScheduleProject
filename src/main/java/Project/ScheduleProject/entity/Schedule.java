@@ -23,28 +23,9 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-//    protected void onCreate(){
-//        this.createdAt = LocalDateTime.now();
-//    }
-//
-//    protected void onUpdate(){
-//        this.updatedAt = LocalDateTime.now();
-//    }
-
     public void update(String author, String task, LocalDateTime updatedAt) {
         this.author = author;
         this.task = task;
         this.updatedAt = updatedAt;
     }
-
-    public void updateTask(String task, LocalDateTime updatedAt) {
-        this.task = task;
-        this.updatedAt = updatedAt;
-    }
-
-    public void updateAuthor(String author, LocalDateTime updatedAt) {
-        this.author = author;
-        this.updatedAt = updatedAt;
-    }
-
 }
