@@ -3,6 +3,7 @@ package Project.ScheduleProject.service;
 import Project.ScheduleProject.dto.ScheduleRequestDto;
 import Project.ScheduleProject.dto.ScheduleResponseDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScheduleService {
@@ -16,13 +17,13 @@ public interface ScheduleService {
     ScheduleResponseDto findScheduleById(Long id);
 
     //Update -> 수정 (전체 수정)
-    ScheduleResponseDto updateSchedule(Long id, String author, String task, String password, String updatedAt);
+    ScheduleResponseDto updateSchedule(Long id, String author, String task, String password, LocalDateTime updatedAt);
 
     // Update -> 수정 (일정만 수정)
-    ScheduleResponseDto updateTask(Long id, String author, String task, String password, String updatedAt);
+    ScheduleResponseDto updateTask(Long id, String author, String task, String password, LocalDateTime updatedAt);
 
     // Update -> 수정 (작성자만 수정)
-    ScheduleResponseDto updateAuthor(Long id, String author, String task, String password, String updatedAt);
+    ScheduleResponseDto updateAuthor(Long id, String author, String task, String password, LocalDateTime updatedAt);
 
     //Delete -> 삭제
     void deleteSchedule(Long id, String password);

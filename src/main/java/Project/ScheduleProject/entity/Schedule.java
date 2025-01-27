@@ -2,20 +2,20 @@ package Project.ScheduleProject.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 public class Schedule {
-    @Setter
     private Long id;
     private String author;
     private String password;
     private String task;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Schedule(String author, String password, String task, String createdAt, String updatedAt){
+    public Schedule(String author, String password, String task, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.author = author;
         this.password = password;
         this.task = task;
@@ -23,18 +23,26 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-    public void update(String author, String task, String updatedAt) {
+//    protected void onCreate(){
+//        this.createdAt = LocalDateTime.now();
+//    }
+//
+//    protected void onUpdate(){
+//        this.updatedAt = LocalDateTime.now();
+//    }
+
+    public void update(String author, String task, LocalDateTime updatedAt) {
         this.author = author;
         this.task = task;
         this.updatedAt = updatedAt;
     }
 
-    public void updateTask(String task, String updatedAt) {
+    public void updateTask(String task, LocalDateTime updatedAt) {
         this.task = task;
         this.updatedAt = updatedAt;
     }
 
-    public void updateAuthor(String author, String updatedAt) {
+    public void updateAuthor(String author, LocalDateTime updatedAt) {
         this.author = author;
         this.updatedAt = updatedAt;
     }

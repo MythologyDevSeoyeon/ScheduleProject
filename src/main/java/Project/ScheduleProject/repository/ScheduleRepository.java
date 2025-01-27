@@ -4,18 +4,31 @@ import Project.ScheduleProject.dto.ScheduleResponseDto;
 import Project.ScheduleProject.entity.Schedule;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleRepository {
 
-   //create
-   Schedule saveSchedule(Schedule schedule);
+    //create
+    ScheduleResponseDto saveSchedule (Schedule schedule);
 
     // Read -> 다건 조회 (전체 조회)
     List<ScheduleResponseDto> findAllSchedules();
 
     // Read -> 단건 조회 (아이디)
-    Schedule findScheduleById(Long id);
+    Optional<Schedule> findScheduleById(Long id);
+
+    //Update -> 수정 (전체 수정)
+    int updateSchedule(Long id, String author, String task);
+
+    // Update -> 수정 (일정만 수정)
+    int updateTask(Long id, String task);
+
+    // Update -> 수정 (작성자만 수정)
+    int updateAuthor(Long id, String author);
 
     //Delete -> 삭제
-    void deleteSchedule(Long id);
+    int deleteSchedule(Long id);
+
+    //optional 검증
+    Schedule findScheduleByIdOrElseThrow(Long id);
 }

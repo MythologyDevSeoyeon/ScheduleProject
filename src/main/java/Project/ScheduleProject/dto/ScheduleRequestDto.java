@@ -3,6 +3,8 @@ package Project.ScheduleProject.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 public class ScheduleRequestDto {
@@ -10,6 +12,6 @@ public class ScheduleRequestDto {
     private String author;
     private String password;
     private String task;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
