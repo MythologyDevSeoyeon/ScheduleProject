@@ -17,7 +17,10 @@ public interface ScheduleRepository {
     // Read -> 단건 조회 (아이디)
     Optional<Schedule> findScheduleById(Long id);
 
-    //Update -> 수정 (전체 수정)
+    // Read -> 조건 조회 (수정 날짜, 작성자)
+    List<ScheduleResponseDto> findScheduleByConditions(String updatedAt, String author);
+
+    // Update -> 수정 (전체 수정)
     int updateSchedule(Long id, String author, String task);
 
     // Update -> 수정 (일정만 수정)

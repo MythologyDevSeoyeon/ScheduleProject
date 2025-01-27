@@ -15,17 +15,17 @@ public class Schedule {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Schedule(String author, String password, String task, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Schedule(String author, String password, String task){
         this.author = author;
         this.password = password;
         this.task = task;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(String author, String task, LocalDateTime updatedAt) {
+    public void update(String author, String task) {
         this.author = author;
         this.task = task;
-        this.updatedAt = updatedAt;
+        this.updatedAt = LocalDateTime.now();
     }
 }

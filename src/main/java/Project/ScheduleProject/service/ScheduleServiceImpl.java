@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         Schedule schedule = new Schedule(
                 requestDto.getAuthor(),
                 requestDto.getPassword(),
-                requestDto.getTask(),
-                requestDto.getCreatedAt(),
-                requestDto.getUpdatedAt()
+                requestDto.getTask()
         );
         return scheduleRepository.saveSchedule(schedule);
     }
@@ -49,10 +46,16 @@ public class ScheduleServiceImpl implements ScheduleService{
         return new ScheduleResponseDto(schedule);
     }
 
+    // Read -> 조건 조회 (수정 날짜, 작성자)
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByConditions(String updatedDate, String author) {
+        return scheduleRepository.findScheduleByConditions(updatedDate, author);
+    }
+
     //Update -> 수정 (전체 수정)
     @Transactional
     @Override
-    public ScheduleResponseDto updateSchedule(Long id, String author, String task, String password, LocalDateTime updateAt) {
+    public ScheduleResponseDto updateSchedule(Long id, String author, String task, String password) {
         // 1. 필수 값 검증
         validateRequiredFields(author,task,password);
 
@@ -71,13 +74,14 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
 
         // 5. Schedule 객체 업데이트
-        schedule.update(author, task, updateAt);
+        schedule.update(author, task);
         return new ScheduleResponseDto(schedule);
     }
 
+
     // Update -> 수정 (일정만 수정)
     @Override
-    public ScheduleResponseDto updateTask(Long id, String author, String task, String password, LocalDateTime updatedAt) {
+    public ScheduleResponseDto updateTask(Long id, String author, String task, String password) {
         // 1. 필수 값 검증
         validateRequiredFields(task,password);
 
@@ -100,7 +104,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     // Update -> 수정 (작성자만 수정)
     @Override
-    public ScheduleResponseDto updateAuthor(Long id, String author, String task, String password, LocalDateTime updatedAt) {
+    public ScheduleResponseDto updateAuthor(Long id, String author, String task, String password) {
         // 1. 필수 값 검증
         validateRequiredFields(author,password);
 

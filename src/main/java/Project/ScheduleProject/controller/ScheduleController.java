@@ -24,11 +24,11 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.saveSchedule(requestDto), HttpStatus.CREATED);
     }
 
-    // Read -> 다건 조회 (전체 조회)
-    @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules() {
-        return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
-    }
+//    // Read -> 다건 조회 (전체 조회)
+//    @GetMapping
+//    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules() {
+//        return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+//    }
 
     // Read -> 단건 조회 (아이디)
     @GetMapping("/{id}")
@@ -36,13 +36,23 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
+    // Read -> 조건 조회 (수정 날짜, 작성자)
+    @GetMapping("/filter")
+    public ResponseEntity<List<ScheduleResponseDto>> findSchedulesByFilter(
+            @RequestParam(required = false) String updatedAt,
+            @RequestParam(required = false) String author
+    ) {
+        return new ResponseEntity<>(scheduleService.findSchedulesByConditions(updatedAt, author), HttpStatus.OK);
+    }
+
+
     //Update -> 수정 (전체 수정)
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateScheduleById(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto requestDto
     ) {
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword(), requestDto.getUpdatedAt()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
     }
 
     // Update -> 수정 (일정만 수정)
@@ -51,7 +61,7 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto requestDto
     ){
-        return new ResponseEntity<>(scheduleService.updateTask(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword(), requestDto.getUpdatedAt()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateTask(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
     }
 
 
@@ -61,7 +71,7 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto requestDto
     ){
-        return new ResponseEntity<>(scheduleService.updateAuthor(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword(), requestDto.getUpdatedAt()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateAuthor(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
     }
 
 
