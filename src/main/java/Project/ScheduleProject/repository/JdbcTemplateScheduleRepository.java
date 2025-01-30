@@ -53,7 +53,7 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     // Read -> 조회 (전체, 아이디, 수정 날짜, 작성자)
     @Override
-    public List<ScheduleResponseDto> findSchedules(Long id, String updatedAt, String author) {
+    public List<Schedule> findSchedules(Long id, String updatedAt, String author) {
         StringBuilder sql = new StringBuilder("SELECT * FROM schedule WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -67,9 +67,8 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         if (updatedAt != null && !updatedAt.trim().isEmpty()) {
             try {
                 LocalDate date = LocalDate.parse(updatedAt); // yyyy-MM-dd 형식
-                sql.append(" AND updatedDate BETWEEN ? AND ?");
-                params.add(date.atStartOfDay()); // 하루의 시작
-                params.add(date.atTime(23, 59, 59)); // 하루의 끝
+                sql.append(" AND DATE(updatedDate) = ?");
+                params.add(date);
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("잘못된 날짜 형식입니다. 'yyyy-MM-dd' 형식으로 입력해주세요.");
             }
@@ -88,22 +87,8 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         return jdbcTemplate.query(sql.toString(), scheduleRowMapper(), params.toArray());
     }
 
-    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
-        return new RowMapper<ScheduleResponseDto>() {
-            @Override
-            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new ScheduleResponseDto(
-                        rs.getLong("id"),
-                        rs.getString("author"),
-                        rs.getString("task"),
-                        ScheduleResponseDto.formatDate(rs.getTimestamp("createdDate").toLocalDateTime()),
-                        ScheduleResponseDto.formatDate(rs.getTimestamp("updatedDate").toLocalDateTime())
-                );
-            }
-        };
-    }
 
-    private RowMapper<Schedule> scheduleRowMapperV2() {
+    private RowMapper<Schedule> scheduleRowMapper() {
         return new RowMapper<Schedule>() {
             @Override
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -119,45 +104,32 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         };
     }
 
-
-//    private RowMapper<ScheduleResponseDto> scheduleRowMapperV3(){
-//        return new RowMapper<ScheduleResponseDto>() {
-//            @Override
-//            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-//                return new ScheduleResponseDto(
-//                        rs.getLong("id"),
-//                        rs.getString("author"),
-//                        rs.getString("task"),
-//                        ScheduleResponseDto.formatDate(rs.getTimestamp("createdDate").toLocalDateTime()),
-//                        ScheduleResponseDto.formatDate(rs.getTimestamp("updatedDate").toLocalDateTime())
-//                );
-//            }
-//        };
-//    }
-
-
-    // Update -> 수정 (전체 수정)
+    // Update -> 수정 (전체 , 일정, 작성자 수정)
     @Override
     public int updateSchedule(Long id, String author, String task) {
-        String sql = "UPDATE schedule SET author = ?, task = ?, updatedDate = ? WHERE id = ?";
-        String updatedDate = ScheduleResponseDto.formatDate(LocalDateTime.now());
-        return jdbcTemplate.update(sql, author, task, updatedDate, id);
-    }
+        StringBuilder sql = new StringBuilder("UPDATE schedule SET updatedDate = ?");
+        List<Object> param = new ArrayList<>();
 
-    // Update -> 수정 (일정만 수정)
-    @Override
-    public int updateTask(Long id, String task) {
-        String sql = "UPDATE schedule SET task = ?, updatedDate = ? WHERE id = ?";
+        // 수정 시간 추가
         String updatedDate = ScheduleResponseDto.formatDate(LocalDateTime.now());
-        return jdbcTemplate.update(sql, task, updatedDate, id);
-    }
+        param.add(updatedDate);
 
-    // Update -> 수정 (작성자만 수정)
-    @Override
-    public int updateAuthor(Long id, String author) {
-        String sql = "UPDATE schedule SET author = ?, updatedDate = ? WHERE id = ?";
-        String updatedDate = ScheduleResponseDto.formatDate(LocalDateTime.now());
-        return jdbcTemplate.update(sql, author, updatedDate, id);
+        // 일정 수정
+        if(task != null && !task.trim().isEmpty()){
+            sql.append(", task = ?");
+            param.add(task);
+        }
+
+        //작성자 수정
+        if(author != null && !author.trim().isEmpty()){
+            sql.append(", author = ?");
+            param.add(author);
+        }
+
+        sql.append(" WHERE id = ?");
+        param.add(id);
+
+        return jdbcTemplate.update(sql.toString(), param.toArray());
     }
 
     //Delete -> 삭제
@@ -169,7 +141,7 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
     //optional 검증
     @Override
     public Schedule findScheduleByIdOrElseThrow(Long id) {
-        List<Schedule> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapperV2(), id);
-        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id));
+        List<Schedule> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapper(), id);
+        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id +  ", 이 아이디는 존재하지 않습니다."));
     }
 }

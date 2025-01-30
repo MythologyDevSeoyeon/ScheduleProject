@@ -11,16 +11,10 @@ public interface ScheduleRepository {
     ScheduleResponseDto saveSchedule (Schedule schedule);
 
     // Read -> 조회 (전체, 아이디, 수정 날짜, 작성자)
-    List<ScheduleResponseDto> findSchedules(Long id, String updatedAt, String author);
+    List<Schedule> findSchedules(Long id, String updatedAt, String author);
 
-    // Update -> 수정 (전체 수정)
+    // Update -> 수정 (전체 , 일정, 작성자 수정)
     int updateSchedule(Long id, String author, String task);
-
-    // Update -> 수정 (일정만 수정)
-    int updateTask(Long id, String task);
-
-    // Update -> 수정 (작성자만 수정)
-    int updateAuthor(Long id, String author);
 
     //Delete -> 삭제
     int deleteSchedule(Long id);

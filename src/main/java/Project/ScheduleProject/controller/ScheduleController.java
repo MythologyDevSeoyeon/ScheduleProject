@@ -35,41 +35,21 @@ public class ScheduleController {
         return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
-//    //Update -> 수정 (전체 수정)
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateScheduleById(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto requestDto
-//    ) {
-//        return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
-//    }
-//
-//    // Update -> 수정 (일정만 수정)
-//    @PatchMapping("/{id}/task")
-//    public ResponseEntity<ScheduleResponseDto> updateTask(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto requestDto
-//    ){
-//        return new ResponseEntity<>(scheduleService.updateTask(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
-//    }
-//
-//
-//    // Update -> 수정 (작성자만 수정)
-//    @PatchMapping("/{id}/author")
-//    public ResponseEntity<ScheduleResponseDto> updateAuthor (
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto requestDto
-//    ){
-//        return new ResponseEntity<>(scheduleService.updateAuthor(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
-//    }
-//
-//
-//    //Delete -> 삭제
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteSchedule(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto requestDto) {
-//        scheduleService.deleteSchedule(id, requestDto.getPassword());
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    // Update -> 수정 (전체 , 일정, 작성자 수정)
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateScheduleById(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto requestDto
+    ) {
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto.getAuthor(), requestDto.getTask(), requestDto.getPassword()), HttpStatus.OK);
+    }
+
+    //Delete -> 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto requestDto) {
+        scheduleService.deleteSchedule(id, requestDto.getPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
