@@ -22,10 +22,4 @@ public class Schedule {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
-    public void update(String author, String task) {
-        this.author = author;
-        this.task = task;
-        this.updatedAt = LocalDateTime.now();
-    }
 }
