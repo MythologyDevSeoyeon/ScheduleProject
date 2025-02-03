@@ -68,7 +68,9 @@ http://localhost:8080/v3/api-docs
 +---------------+-------------------+---------------+
 ```
 
-#### 1️⃣ 일정 생성 (`POST /schedules`)
+### 1️⃣ 일정 생성
+`POST /schedules`
+<br>Description: 새로운 일정을 생성합니다.
 ##### 요청
 ```json
 {
@@ -89,8 +91,30 @@ http://localhost:8080/v3/api-docs
 ```
 <br>
 
-#### 2️⃣ 일정 수정 (`PATCH /schedules/{id}`) - 할일 수정
+### 2️⃣ 일정 조회
+`GET /schedules`
+<br> Description: 등록된 모든 일정을 조회합니다. id, updatedAt, author로 필터링 가능
 ##### 요청
+`GET /schedules?updatedAt=2025-02-03`
+
+##### 응답
+```json
+{
+  "id": 1,
+  "author": "사용자 이름",
+  "task": "할 일",
+  "createdAt": "2025-01-27 10:00",
+  "updatedAt": "2025-02-03 13:15"
+}
+```
+<br>
+
+### 3️⃣ 일정 수정
+`PATCH /schedules/{id}`
+<br> Description: 일정 ID를 기준으로 특정 일정을 수정합니다. 작성자와 할 일을 수정할 수 있다.
+#### 🔷 할 일 수정
+##### 요청 
+`PATCH /schedules/1`
 ```json
 {
   "task": "수정된 할 일 내용"
@@ -109,7 +133,7 @@ http://localhost:8080/v3/api-docs
 ```
 <br>
 
-#### 3️⃣ 일정 수정 (`PATCH /schedules/{id}`) - 작성자 수정
+#### 🔷 작성자 수정
 ##### 요청
 ```json
 {
@@ -129,7 +153,8 @@ http://localhost:8080/v3/api-docs
 ```
 <br>
 
-#### 4️⃣ 일정 삭제 (`DELETE /schedules/{id}`)
+### 4️⃣ 일정 삭제 
+`DELETE /schedules/{id}`
 ##### 요청
 ```json
   "password": "비밀번호",
