@@ -11,8 +11,8 @@
 * [📑 API 문서](#api-문서)
 * [📑 ERD](#erd)
 * [📂 파일 구조](#파일-구조)
-* [사용된 기술](#사용된-기술)
-* [Contact](#contact)
+* [📌사용된 기술](#사용된-기술)
+* [📞 Contact](#contact)
 <br><br><br>
 
 
@@ -174,4 +174,20 @@ http://localhost:8080/v3/api-docs
 │   │     ├── SwaggerConfig.java       # Swagger 설정
 │   ├── ScheduleApplication.java       # 프로젝트 시작 파일
 ```
+<br><br><br>
+
+## 📌사용된 기술
+<div align=center> 
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"> 
+  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> 
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
+  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+</div>
+
+<br><br><br>
+
+## 📞Contact
+프로젝트 관련 문의는 [@Seoyeon](https://github.com/MythologyDevSeoyeon)으로 연락주세요
 <br><br><br>
